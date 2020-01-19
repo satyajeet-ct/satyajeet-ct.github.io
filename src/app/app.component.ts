@@ -13,10 +13,7 @@ export class AppComponent {
   log;
   result;
   metadata;
-  events;
-  profileUpdates;
-  data;
-  meta;
+  queue;
 
   constructor(
     private logParser: LogParserService,
@@ -31,16 +28,18 @@ export class AppComponent {
   onSubmit(customerData) {
     // Process checkout data here
     this.metadata = {};
-    this.events = [];
+    this.queue = [];
+    /* this.events = [];
     this.profileUpdates = [];
-    this.data = [];
+    this.data = []; */
     this.logParser.parseLog(customerData.log).then(
       result => {
         this.metadata = result['metadata'];
-        this.events = result['events'];
+        this.queue = result['queue'];
+        /* this.events = result['events'];
         this.profileUpdates = result['profile'];
         this.data = result['data'];
-        this.meta = result['meta'];
+        this.meta = result['meta']; */
       }
     )
   }

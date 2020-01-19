@@ -39,11 +39,16 @@ export class LogParserService {
       FcmTokenListenerService: false,
       UIEditor: false,
     },
-    events: [],
+    queue: []
+
+  }
+
+  /*
+      events: [],
     profile: [],
     data: [],
-    meta:[]
-  }
+    meta: []
+    */
 
 
   constructor() { }
@@ -66,10 +71,7 @@ export class LogParserService {
         FcmTokenListenerService: false,
         UIEditor: false,
       },
-      events: [],
-      profile: [],
-      data: [],
-      meta:[]
+      queue: []
     }
   }
 
@@ -314,7 +316,7 @@ export class LogParserService {
   }
 
   QueuedEvent(logLine: String) {
-    if (logLine.includes('Queued event:')) {
+    /* if (logLine.includes('Queued event:')) {
       let eventJsonString = logLine.split('Queued event:')[1]
       let eventJSON = JSON.parse(eventJsonString);
       if (eventJSON['type'] === 'profile') {
@@ -326,6 +328,29 @@ export class LogParserService {
       } else if ((eventJSON['type'] === 'meta')) {
         this.result.meta.push(eventJSON);
       }
+    } else  */if (logLine.includes('Send queue contains')) {
+      let eventJSONArrayString = logLine.split('items:')[1]
+      let eventJSONArray = JSON.parse(eventJSONArrayString);
+      var queueObj = {
+        events: [],
+        profile: [],
+        meta: [],
+        data: []
+      }
+      eventJSONArray.forEach(eventJSON => {
+        if (eventJSON['type'] === 'profile') {
+          queueObj.profile.push(eventJSON);
+        } else if ((eventJSON['type'] === 'event')) {
+          queueObj.events.push(eventJSON);
+        } else if ((eventJSON['type'] === 'data')) {
+          queueObj.data.push(eventJSON);
+        } else if ((eventJSON['type'] === 'meta')) {
+          queueObj.meta.push(eventJSON);
+        }
+      });
+      this.result.queue.push(queueObj);
     }
+
+    //    [{ "g": "__71e3251ce05a49e3855de455d6dc0b07", "type": "meta", "af": { "Build": "1", "Version": "1.0", "OS Version": "10", "SDK Version": 30602, "Make": "Google", "Model": "Android SDK built for x86", "Carrier": "Android", "useIP": false, "OS": "Android", "wdt": 2.57, "hgt": 4.27, "dpi": 420, "cc": "us" }, "id": "TEST-Z88-R88-765Z", "tk": "TEST-bb2-bb1", "l_ts": 0, "f_ts": 0, "ddnd": false, "rtl": [], "imp": 0, "tlc": [] }, { "evtName": "App Launched", "evtData": { "Build": "1", "Version": "1.0", "OS Version": "10", "SDK Version": 30602, "Make": "Google", "Model": "Android SDK built for x86", "Carrier": "Android", "useIP": false, "OS": "Android", "wdt": 2.57, "hgt": 4.27, "dpi": 420, "cc": "us" }, "s": 1579444896, "pg": 1, "type": "event", "ep": 1579444898, "f": true, "lsl": 0, "pai": "com.example.androidct", "dsync": true }, { "data": { "action": "register", "id": "fgLsJvBMZN4:APA91bGf_wk2Q7eA-unGrOOv53a3HxVfCV1K8RS8pyNtgUWQ70sYVvQA6K3MX2rCvBpqksWKAPJryw0Q1I-Bn01BvpjkBgsN-r23gIXjypReAFW7d-Ew72SpkgWR2ImwvKfBi92lkn-v", "type": "fcm" }, "s": 1579444896, "pg": 1, "type": "data", "ep": 1579444898, "f": true, "lsl": 0, "dsync": false }]
   }
 }
