@@ -84,10 +84,10 @@
         </div>
       </div>
 
-      <div class="mt-4" *ngIf="queueItem.profileUpdates">
+      <div class="mt-4" *ngIf="queueItem.profile">
 
-        <h2 *ngIf="queueItem.profileUpdates.length>0">Profile Updates</h2>
-        <div class="mt-4" *ngFor="let profileUpdate of queueItem.profileUpdates">
+        <h2 *ngIf="queueItem.profile.length>0">Profile Updates</h2>
+        <div class="mt-4" *ngFor="let profileUpdate of queueItem.profile">
           <h5>{{profileUpdate.evtName}} <span class="badge badge-dark" *ngIf="profileUpdate.f">First Session</span></h5>
           <p>{{profileUpdate.ep | datePipe}}</p>
           <table class="table table-hover">
